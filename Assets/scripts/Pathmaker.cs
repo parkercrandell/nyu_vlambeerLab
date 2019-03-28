@@ -11,16 +11,57 @@ using UnityEngine;
 
 public class Pathmaker : MonoBehaviour {
 
-// STEP 2: ============================================================================================
-// translate the pseudocode below
+    // STEP 2: ============================================================================================
+    // translate the pseudocode below
 
-//	DECLARE CLASS MEMBER VARIABLES:
-//	Declare a private integer called counter that starts at 0; 		// counter var will track how many floor tiles I've instantiated
-//	Declare a public Transform called floorPrefab, assign the prefab in inspector;
-//	Declare a public Transform called pathmakerSpherePrefab, assign the prefab in inspector; 		// you'll have to make a "pathmakerSphere" prefab later
+    //	DECLARE CLASS MEMBER VARIABLES:
+    //	Declare a private integer called counter that starts at 0; 		// counter var will track how many floor tiles I've instantiated
+    //	Declare a public Transform called floorPrefab, assign the prefab in inspector;
+    //	Declare a public Transform called pathmakerSpherePrefab, assign the prefab in inspector; 		// you'll have to make a "pathmakerSphere" prefab later
+    private int counter = 0;
+    public Transform floorPrefab;
+    public Transform pathmakerSpherePrefab;
+    public static int tiles = 0;
+    public int sphereLife = 0;
+    public float turnRate;
+    public float spawnRate;
 
+    private void Start()
+    {
+        sphereLife = (int) Mathf.Round((Random.Range(10f,50f)));
+        turnRate = Random.Range(0.1f, 0.19f);
+        spawnRate = Random.Range( 0.9f,0.95f);
+    }
 
-	void Update () {
+    void Update () {
+        
+        if (counter < sphereLife && tiles < 1000)
+        {
+
+            float r = Random.Range(0.0f, 1.0f);
+            if (r < 0.2f-turnRate)
+            {
+                transform.Rotate(0, -90, 0);
+            }
+            else if (r <= 0.4f - turnRate)
+            {
+                transform.Rotate(0, -90, 0);
+            }
+            else if ( r >= spawnRate && r <= 1.0f)
+            {
+                Instantiate(pathmakerSpherePrefab, transform.position, new Quaternion(transform.rotation.x,90, transform.rotation.z, 0));
+            }
+
+            Instantiate(floorPrefab,transform.position,transform.rotation);
+            transform.Translate(Vector3.forward * 5);
+            counter++;
+            tiles++;
+            Debug.Log(tiles);
+        }
+        else
+        {
+            Destroy(transform.gameObject);
+        }
 //		If counter is less than 50, then:
 //			Generate a random number from 0.0f to 1.0f;
 //			If random number is less than 0.25f, then rotate myself 90 degrees;
